@@ -1,8 +1,28 @@
+"use client"
 import Image from "next/image";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {auth} from "@/app/firebase/config"
+import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
 
 export default function Home() {
+  const [user] = useAuthState(auth);
+const router =useRouter();
+const userSession = sessionStorage.getItem('user');
+
+if(!user && !userSession){
+  router.push('/sign-up')
+}
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+<button onClick={()=> {
+  signOut(auth)
+  sessionStorage.removeItem('user')
+}}>
+  logout
+</button>
+
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
         <Image
           className="dark:invert"
